@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daily Scrum Facilitator Rota</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EFE9;
+    --border: rgba(0,0,0,0.08);
+    --border-mid: rgba(0,0,0,0.14);
+    --text: #1A1916;
+    --text-muted: #706E67;
+    --text-faint: #A8A69F;
+    --accent: #378ADD;
+    --accent-bg: #E6F1FB;
+    --accent-text: #0C447C;
+    --accent-mid: #185FA5;
+    --warn: #A35C0A;
+    --warn-bg: #FEF2E4;
+    --danger: #C0392B;
+    --danger-bg: #FDECEB;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.5; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 2rem; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .header-inner { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 32px; height: 32px; background: var(--text); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .logo-icon svg { width: 16px; height: 16px; fill: white; }
+  .logo-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+  .header-actions { display: flex; align-items: center; gap: 8px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-mid); background: var(--surface); color: var(--text); transition: background 0.15s, border-color 0.15s; white-space: nowrap; }
+  .btn:hover { background: var(--surface2); border-color: rgba(0,0,0,0.2); }
+  .btn-primary { background: var(--text); color: white; border-color: var(--text); }
+  .btn-primary:hover { background: #333; border-color: #333; }
+  .btn svg { width: 14px; height: 14px; }
+  main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 1.75rem; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; box-shadow: var(--shadow); }
+  .stat-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-value { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+  .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .stat-card.highlight { background: var(--accent-bg); border-color: #B5D4F4; }
+  .stat-card.highlight .stat-label { color: var(--accent-mid); }
+  .stat-card.highlight .stat-value { color: var(--accent-text); font-size: 20px; }
+  .stat-card.highlight .stat-sub { color: var(--accent-mid); }
+
+  /* Toolbar */
+  .toolbar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .toolbar-label { font-size: 12px; font-weight: 500; color: var(--text-muted); white-space: nowrap; }
+  .toolbar input[type="text"], .toolbar select { font-family: inherit; font-size: 13px; color: var(--text); background: var(--bg); border: 1px solid var(--border-mid); border-radius: var(--radius); padding: 7px 12px; outline: none; transition: border-color 0.15s; }
+  .toolbar input[type="text"] { min-width: 160px; }
+  .toolbar input[type="text"]:focus, .toolbar select:focus { border-color: var(--accent); }
+  .spacer { flex: 1; }
+  .tab-group { display: flex; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border-mid); overflow: hidden; }
+  .tab-btn { padding: 6px 14px; font-size: 12px; font-weight: 500; cursor: pointer; background: transparent; border: none; color: var(--text-muted); font-family: inherit; transition: background 0.15s, color 0.15s; }
+  .tab-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); border-radius: calc(var(--radius) - 1px); }
+
+  /* People section */
+  .people-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1.25rem; box-shadow: var(--shadow); }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .section-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .people-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .person-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px 6px 6px; background: var(--bg); border: 1px solid var(--border-mid); border-radius: 999px; font-size: 13px; font-weight: 500; cursor: grab; user-select: none; transition: background 0.15s, box-shadow 0.15s; }
+  .person-chip:hover { background: var(--surface2); box-shadow: var(--shadow-md); }
+  .person-chip.dragging { opacity: 0.4; }
+  .person-chip.drag-over { border-color: var(--accent); background: var(--accent-bg); }
+  .chip-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; flex-shrink: 0; }
+  .chip-btn { width: 20px; height: 20px; border-radius: 50%; border: none; cursor: pointer; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; font-family: inherit; }
+  .chip-btn.remove { background: var(--danger-bg); color: var(--danger); }
+  .chip-btn.remove:hover { background: var(--danger); color: white; }
+  .add-person-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+  .add-person-row input { font-family: inherit; font-size: 13px; color: var(--text); background: var(--bg); border: 1px solid var(--border-mid); border-radius: var(--radius); padding: 7px 12px; outline: none; flex: 1; max-width: 200px; transition: border-color 0.15s; }
+  .add-person-row input:focus { border-color: var(--accent); }
+
+  /* Table */
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface2); text-align: left; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 11px 16px; font-size: 14px; }
+  .row-current { background: var(--accent-bg) !important; }
+  .row-current td:first-child { border-left: 3px solid var(--accent); padding-left: 13px; }
+  .row-leave .date-main { text-decoration: line-through; color: var(--text-muted); }
+  .row-leave .date-sub { text-decoration: line-through; color: var(--text-faint); }
+  .week-num { font-size: 12px; color: var(--text-faint); font-family: 'DM Mono', monospace; }
+  .date-cell { font-size: 13px; }
+  .date-main { font-weight: 500; }
+  .date-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .name-cell { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; flex-shrink: 0; }
+  .name-text { font-weight: 500; }
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .badge-current { background: var(--accent-bg); color: var(--accent-text); border: 1px solid #B5D4F4; }
+  .badge-leave { background: var(--warn-bg); color: var(--warn); }
+  .row-actions { display: flex; gap: 6px; opacity: 0; transition: opacity 0.15s; justify-content: flex-end; }
+  tbody tr:hover .row-actions { opacity: 1; }
+  .row-btn { padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; border: 1px solid var(--border-mid); background: var(--surface); cursor: pointer; font-family: inherit; color: var(--text); transition: background 0.12s; }
+  .row-btn:hover { background: var(--surface2); }
+  .row-btn.danger { color: var(--danger); border-color: var(--danger-bg); }
+  .row-btn.danger:hover { background: var(--danger-bg); }
+
+  /* Sync bar */
+  .sync-bar { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--surface2); border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; }
+  .sync-dot.syncing { background: #F59E0B; animation: pulse 1s infinite; }
+  .sync-dot.synced { background: #1B7A4A; }
+  .sync-dot.error { background: var(--danger); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* Modal */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
+  .modal-backdrop.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--surface); border-radius: var(--radius-lg); padding: 1.5rem; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); transform: translateY(8px); transition: transform 0.15s; }
+  .modal-backdrop.open .modal { transform: translateY(0); }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 1rem; }
+  .modal-field { margin-bottom: 12px; }
+  .modal-field label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 4px; }
+  .modal-field select, .modal-field input { width: 100%; font-family: inherit; font-size: 14px; color: var(--text); background: var(--bg); border: 1px solid var(--border-mid); border-radius: var(--radius); padding: 8px 12px; outline: none; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; }
+
+  /* Formula box */
+  .formula-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-top: 1.25rem; box-shadow: var(--shadow); }
+  .formula-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .formula-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .formula-code { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--bg); border: 1px solid var(--border-mid); border-radius: var(--radius); padding: 10px 14px; color: var(--text); display: block; white-space: pre-wrap; word-break: break-all; margin-bottom: 8px; }
+  .formula-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+
+  /* Loading overlay */
+  .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 500; gap: 12px; }
+  .loading-overlay.hidden { display: none; }
+  .spinner { width: 28px; height: 28px; border: 3px solid var(--border-mid); border-top-color: var(--text); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 13px; color: var(--text-muted); }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--text); color: white; padding: 10px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500; box-shadow: var(--shadow-md); transform: translateY(60px); opacity: 0; transition: transform 0.2s, opacity 0.2s; z-index: 300; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .empty { text-align: center; padding: 3rem; color: var(--text-muted); font-size: 14px; }
+
+  @media (max-width: 640px) { main { padding: 1rem; } header { padding: 0 1rem; } .formula-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading rota…</div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+      </div>
+      <div>
+        <div class="logo-title">Daily Scrum Facilitator Rota</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="openModal('swap')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 5h10M8 2l3 3-3 3M15 11H5M8 8l-3 3 3 3"/></svg>
+        Swap weeks
+      </button>
+      <button class="btn btn-primary" onclick="exportCSV()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M5 7l3 3 3-3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="stats-grid" id="stats-grid"></div>
+
+  <div class="toolbar">
+    <span class="toolbar-label">Filter</span>
+    <input type="text" id="search" placeholder="Search name…" oninput="renderTable()" />
+    <select id="person-filter" onchange="renderTable()">
+      <option value="">All people</option>
+    </select>
+    <select id="status-filter" onchange="renderTable()">
+      <option value="">All statuses</option>
+      <option value="upcoming">Upcoming</option>
+      <option value="past">Past</option>
+      <option value="leave">Out of Office</option>
+    </select>
+    <div class="spacer"></div>
+    <div class="tab-group">
+      <button class="tab-btn active" onclick="setView('table',this)">Table</button>
+      <button class="tab-btn" onclick="setView('compact',this)">Compact</button>
+    </div>
+  </div>
+
+  <div class="table-wrap" id="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:48px;">#</th>
+          <th>Date</th>
+          <th>Facilitator</th>
+          <th style="width:110px; text-align:right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rota-body"></tbody>
+    </table>
+    <div class="empty" id="empty-state" style="display:none;">No rows match your filters.</div>
+    <div class="sync-bar">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-label">Loading…</span>
+      <span style="margin-left:auto; cursor:pointer; color: var(--accent-mid);" onclick="loadOverrides()">↻ Refresh</span>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-title">Spreadsheet formula — never rebuild this manually</div>
+    <div class="formula-desc">Paste the anchor date in A2, drag A3 down for all weeks. Put the INDEX formula in B2 and drag down. The cycle repeats forever.</div>
+    <div class="formula-grid">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Column A — dates</div>
+        <code class="formula-code">=A2+7</code>
+        <button class="btn" style="font-size:12px;padding:5px 12px;" onclick="copyText('=A2+7','Date formula copied')">Copy</button>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Column B — facilitator name</div>
+        <code class="formula-code" id="index-formula">=INDEX({"Susan","Eduardo","Radek","Adrian","Michal","Andrei","Kieran","Adi"},MOD(ROWS($A$2:A2)-1,8)+1)</code>
+        <button class="btn" style="font-size:12px;padding:5px 12px;" onclick="copyFormula()">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="people-section">
+    <div class="section-header">
+      <span class="section-title">Rotation order — drag to reorder</span>
+      <span style="font-size:12px; color:var(--text-muted);">Changes regenerate the rota</span>
+    </div>
+    <div class="people-list" id="people-list"></div>
+    <div class="add-person-row">
+      <input type="text" id="new-name" placeholder="Add new person…" maxlength="30" onkeydown="if(event.key==='Enter')addPerson()" />
+      <button class="btn" onclick="addPerson()">+ Add</button>
+    </div>
+  </div>
+</main>
+
+<!-- Swap modal -->
+<div class="modal-backdrop" id="modal-swap">
+  <div class="modal">
+    <div class="modal-title">Swap two weeks</div>
+    <div class="modal-field"><label>Week A</label><select id="swap-a"></select></div>
+    <div class="modal-field"><label>Week B</label><select id="swap-b"></select></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('swap')">Cancel</button>
+      <button class="btn btn-primary" onclick="doSwap()">Swap</button>
+    </div>
+  </div>
+</div>
+
+<!-- OOO modal -->
+<div class="modal-backdrop" id="modal-leave">
+  <div class="modal">
+    <div class="modal-title" id="leave-modal-title">Out of Office</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:1rem;" id="leave-modal-desc"></div>
+    <div class="modal-field"><label>Cover by</label><select id="leave-cover"></select></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('leave')">Cancel</button>
+      <button class="btn" style="color:var(--warn);border-color:var(--warn-bg);" onclick="markLeaveNocover()">Skip week (no cover)</button>
+      <button class="btn btn-primary" onclick="markLeaveWithCover()">Set cover</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const SHEET_ID = '1Qd_kMzWkv6cMyG6hpYQQo-l0Nxy4NL0dH9S5G8H744I';
+const SHEET_NAME = 'Overrides';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxwDFm_JZM4vwoU_0b_1daoK9gFi7zTq9jdl5fPBomhieryb4876cmenZbnQIWuPt0/exec'; // Set this after deploying Apps Script — see instructions below
+// ─────────────────────────────────────────────────────────────────────────────
+
+const ANCHOR = new Date(2026, 4, 18);
+const WEEKS = 104; // 2 years rolling — increase freely
+
+const AVATAR_COLORS = [
+  {bg:'#EEEDFE',text:'#3C3489'},{bg:'#E1F5EE',text:'#085041'},
+  {bg:'#FAECE7',text:'#712B13'},{bg:'#FBEAF0',text:'#72243E'},
+  {bg:'#E6F1FB',text:'#0C447C'},{bg:'#EAF3DE',text:'#27500A'},
+  {bg:'#FAEEDA',text:'#633806'},{bg:'#FCEBEB',text:'#791F1F'},
+  {bg:'#E6F5ED',text:'#1B7A4A'},{bg:'#FEF2E4',text:'#A35C0A'},
+];
+
+let people = ['Susan','Eduardo','Radek','Adrian','Michal','Andrei','Kieran','Adi'];
+let overrides = {};
+let viewMode = 'table';
+let leaveTarget = null;
+let lastSynced = null;
+
+function getColor(name) {
+  let hash = 0;
+  for (let i=0;i<name.length;i++) hash = name.charCodeAt(i) + ((hash<<5)-hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function buildRota() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const msPerWeek = 7*24*60*60*1000;
+  const weeksSinceAnchor = Math.floor((today - ANCHOR) / msPerWeek);
+  const n = people.length;
+  const cycleStart = weeksSinceAnchor < 0 ? 0 : Math.floor(weeksSinceAnchor / n) * n;
+  const rows = [];
+  for (let ci=0; ci<n; ci++) {
+    const i = cycleStart + ci;
+    const d = new Date(ANCHOR);
+    d.setDate(ANCHOR.getDate() + i*7);
+    const baseIdx = i % n;
+    const ov = overrides[i] || {};
+    const person = people[baseIdx];
+    const isLeave = ov.leave || false;
+    const cover = ov.cover || null;
+    const displayPerson = isLeave ? (cover || '—') : person;
+    rows.push({ idx:ci+1, weekIndex:i, date:d, basePerson:person, displayPerson, isLeave, cover });
+  }
+  return rows;
+}
+
+function getNextCycleInfo() {
+  const rota = buildRota();
+  const lastRow = rota[rota.length - 1];
+  const nextDate = new Date(lastRow.date);
+  nextDate.setDate(nextDate.getDate() + 7);
+  return { name: people[0], date: nextDate };
+}
+
+function fmtDate(d) { return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function fmtDay(d) { return d.toLocaleDateString('en-GB',{weekday:'long'}); }
+function isCurrentWeek(d) { const t=new Date(),n=new Date(d); n.setDate(d.getDate()+7); return d<=t&&t<n; }
+function isPast(d) { const t=new Date(); t.setHours(0,0,0,0); return d<t; }
+
+// ── GOOGLE SHEETS SYNC ──────────────────────────────────────────────────────
+function setSyncStatus(state, msg) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot ' + state;
+  lbl.textContent = msg;
+}
+
+async function loadOverrides() {
+  setSyncStatus('syncing', 'Loading from Google Sheets…');
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);?$/, ''));
+    const rows = json.table.rows || [];
+    const newOverrides = {};
+    rows.forEach(row => {
+      if (!row.c || !row.c[0] || row.c[0].v === null) return;
+      const weekIndex = parseInt(row.c[0].v) - 1;
+      if (isNaN(weekIndex)) return;
+      const type = row.c[1] ? (row.c[1].v || '').toString().toLowerCase() : '';
+      const cover = row.c[2] ? (row.c[2].v || '').toString().trim() : null;
+      if (type === 'ooo' || type === 'out of office' || type === 'leave') {
+        newOverrides[weekIndex] = { leave: true, cover: cover || null };
+      } else if (type === 'swap') {
+        const swapWith = row.c[2] ? parseInt(row.c[2].v) - 1 : null;
+        if (swapWith !== null && !isNaN(swapWith)) {
+          const rota = buildRotaBase();
+          newOverrides[weekIndex] = { leave: false, cover: rota[swapWith] };
+          newOverrides[swapWith] = { leave: false, cover: rota[weekIndex] };
+        }
+      }
+    });
+    overrides = newOverrides;
+    lastSynced = new Date();
+    setSyncStatus('synced', 'Synced ' + lastSynced.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}));
+    refresh();
+  } catch(e) {
+    setSyncStatus('error', 'Could not load from Sheets — showing cached data');
+    console.error(e);
+    refresh();
+  }
+  document.getElementById('loading-overlay').classList.add('hidden');
+}
+
+function buildRotaBase() {
+  return Array.from({length: 104}, (_,i) => people[i % people.length]);
+}
+
+async function saveOverride(weekIndex, type, cover) {
+  setSyncStatus('syncing', 'Saving…');
+  if (!APPS_SCRIPT_URL) {
+    setSyncStatus('error', 'Apps Script URL not set — see setup instructions');
+    showSetupInstructions();
+    return false;
+  }
+  try {
+    const payload = { weekIndex: weekIndex + 1, type, cover: cover || '' };
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    setSyncStatus('synced', 'Saved ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}));
+    return true;
+  } catch(e) {
+    setSyncStatus('error', 'Save failed — check console');
+    console.error(e);
+    return false;
+  }
+}
+
+async function deleteOverride(weekIndex) {
+  setSyncStatus('syncing', 'Saving…');
+  if (!APPS_SCRIPT_URL) {
+    setSyncStatus('error', 'Apps Script URL not set — see setup instructions');
+    showSetupInstructions();
+    return false;
+  }
+  try {
+    const payload = { weekIndex: weekIndex + 1, type: 'delete' };
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    setSyncStatus('synced', 'Saved ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}));
+    return true;
+  } catch(e) {
+    setSyncStatus('error', 'Save failed');
+    console.error(e);
+    return false;
+  }
+}
+
+function showSetupInstructions() {
+  const msg = `SETUP REQUIRED\n\nTo enable saving, you need to deploy a Google Apps Script:\n\n1. Open your Google Sheet\n2. Go to Extensions → Apps Script\n3. Paste the script from the instructions\n4. Deploy as Web App (Anyone can access)\n5. Copy the Web App URL\n6. Paste it into the APPS_SCRIPT_URL variable at the top of this HTML file\n\nSee the full instructions at the bottom of the page.`;
+  alert(msg);
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+function renderStats() {
+  const rota = buildRota();
+  const cur = rota.find(r=>isCurrentWeek(r.date));
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card highlight">
+      <div class="stat-label">Current facilitator</div>
+      <div class="stat-value">${cur ? cur.displayPerson : '—'}</div>
+      <div class="stat-sub">${cur ? 'w/c '+fmtDate(cur.date) : 'No active week'}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Team size</div>
+      <div class="stat-value">${people.length}</div>
+      <div class="stat-sub">people in rotation</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Out of office</div>
+      <div class="stat-value">${Object.values(overrides).filter(o=>o.leave).length}</div>
+      <div class="stat-sub">override${Object.values(overrides).filter(o=>o.leave).length!==1?'s':''} active</div>
+    </div>
+  `;
+}
+
+function renderPeople() {
+  const list = document.getElementById('people-list');
+  list.innerHTML = '';
+  people.forEach((name, i) => {
+    const c = getColor(name);
+    const chip = document.createElement('div');
+    chip.className = 'person-chip';
+    chip.draggable = true;
+    chip.dataset.idx = i;
+    chip.innerHTML = `
+      <span class="chip-avatar" style="background:${c.bg};color:${c.text};">${name.slice(0,2).toUpperCase()}</span>
+      <span>${name}</span>
+      <span style="color:var(--text-faint);font-size:11px;">⠿</span>
+      <button class="chip-btn remove" onclick="removePerson(${i})" title="Remove">×</button>
+    `;
+    chip.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', i); chip.classList.add('dragging'); });
+    chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+    chip.addEventListener('dragover', e => { e.preventDefault(); chip.classList.add('drag-over'); });
+    chip.addEventListener('dragleave', () => chip.classList.remove('drag-over'));
+    chip.addEventListener('drop', e => {
+      e.preventDefault(); chip.classList.remove('drag-over');
+      const from = parseInt(e.dataTransfer.getData('text/plain'));
+      const to = i;
+      if (from !== to) { const m = people.splice(from,1)[0]; people.splice(to,0,m); overrides={}; refresh(); toast('Rotation order updated'); }
+    });
+    list.appendChild(chip);
+  });
+  updateFilters();
+  updateFormula();
+}
+
+function addPerson() {
+  const inp = document.getElementById('new-name');
+  const name = inp.value.trim();
+  if (!name) return;
+  if (people.includes(name)) { toast('Name already in rota'); return; }
+  people.push(name); inp.value = '';
+  overrides = {}; refresh(); toast(name+' added to rotation');
+}
+
+function removePerson(idx) {
+  if (people.length <= 2) { toast('Need at least 2 people'); return; }
+  const name = people[idx];
+  people.splice(idx,1); overrides={}; refresh(); toast(name+' removed');
+}
+
+function renderTable() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const personF = document.getElementById('person-filter').value;
+  const statusF = document.getElementById('status-filter').value;
+  const rota = buildRota();
+  const tbody = document.getElementById('rota-body');
+  const empty = document.getElementById('empty-state');
+  tbody.innerHTML = '';
+  let count = 0;
+
+  rota.forEach(r => {
+    if (search && !r.displayPerson.toLowerCase().includes(search) && !r.basePerson.toLowerCase().includes(search)) return;
+    if (personF && r.basePerson !== personF && r.displayPerson !== personF) return;
+    if (statusF === 'upcoming' && isPast(r.date)) return;
+    if (statusF === 'past' && !isPast(r.date)) return;
+    if (statusF === 'leave' && !r.isLeave) return;
+
+    const isCur = isCurrentWeek(r.date);
+    const c = getColor(r.displayPerson === '—' ? r.basePerson : r.displayPerson);
+    const tr = document.createElement('tr');
+    if (isCur) tr.className = 'row-current';
+    if (r.isLeave) tr.classList.add('row-leave');
+
+    const statusBadge = isCur && !r.isLeave
+      ? `<span class="badge badge-current">This week</span>`
+      : r.isLeave ? `<span class="badge badge-leave">${r.cover ? 'Covered by '+r.cover : 'Skipped'}</span>`
+      : isCur ? `<span class="badge badge-current">This week</span>` : '';
+
+    const past = isPast(r.date) && !isCur;
+    // Name display — cross out past names and OOO originals
+    const avatarName = r.isLeave && r.cover ? r.cover : r.displayPerson === '—' ? r.basePerson : r.displayPerson;
+    const nameDisplay = r.isLeave
+      ? `<span style="text-decoration:line-through;color:var(--text-muted);margin-right:6px;">${r.basePerson}</span>${r.cover ? r.cover : '<em style="color:var(--text-faint);font-style:normal;">Skipped</em>'}`
+      : past
+      ? `<span style="text-decoration:line-through;color:var(--text-muted);">${r.displayPerson}</span>`
+      : r.displayPerson;
+
+    if (viewMode === 'compact') {
+      tr.innerHTML = `
+        <td class="week-num" style="${past?'color:var(--text-faint);':''}">${String(r.idx).padStart(2,'0')}</td>
+        <td class="date-cell"><span class="date-main" style="${past?'text-decoration:line-through;color:var(--text-muted);':''}">${fmtDate(r.date)}</span></td>
+        <td><div class="name-cell">
+          <div class="avatar" style="background:${c.bg};color:${c.text};opacity:${past?'0.5':'1'}">${avatarName.slice(0,2).toUpperCase()}</div>
+          <span class="name-text">${nameDisplay}</span>${statusBadge}
+        </div></td>
+        <td><div class="row-actions">
+          ${r.isLeave ? `<button class="row-btn" onclick="restoreWeek(${r.weekIndex})">Restore</button>` : !past ? `<button class="row-btn danger" onclick="openLeave(${r.weekIndex})">Out of Office</button>` : ''}
+        </div></td>`;
+    } else {
+      tr.innerHTML = `
+        <td class="week-num" style="${past?'color:var(--text-faint);':''}">${String(r.idx).padStart(2,'0')}</td>
+        <td class="date-cell">
+          <div class="date-main" style="${past?'text-decoration:line-through;color:var(--text-muted);':''}">${fmtDate(r.date)}</div>
+          <div class="date-sub" style="${past?'text-decoration:line-through;color:var(--text-faint);':''}">${fmtDay(r.date)}</div>
+        </td>
+        <td><div class="name-cell">
+          <div class="avatar" style="background:${c.bg};color:${c.text};opacity:${past?'0.5':'1'}">${avatarName.slice(0,2).toUpperCase()}</div>
+          <div>
+            <div class="name-text">${nameDisplay}</div>
+            ${r.isLeave ? `<div style="font-size:11px;color:var(--warn);">Out of Office</div>` : ''}
+          </div>
+          ${statusBadge}
+        </div></td>
+        <td><div class="row-actions">
+          ${r.isLeave ? `<button class="row-btn" onclick="restoreWeek(${r.weekIndex})">Restore</button>` : !past ? `<button class="row-btn danger" onclick="openLeave(${r.weekIndex})">Out of Office</button>` : ''}
+        </div></td>`;
+    }
+    tbody.appendChild(tr);
+    count++;
+  });
+  empty.style.display = count===0 ? 'block' : 'none';
+
+  // Repeat footer
+  const next = getNextCycleInfo();
+  let footer = document.getElementById('cycle-footer');
+  if (!footer) {
+    footer = document.createElement('div');
+    footer.id = 'cycle-footer';
+    footer.style.cssText = 'text-align:center;padding:10px 16px;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);background:var(--surface2);';
+    document.getElementById('table-wrap').appendChild(footer);
+  }
+  footer.textContent = '↻ Restarts from ' + next.name + ' on ' + fmtDate(next.date);
+}
+
+function updateFilters() {
+  const pf = document.getElementById('person-filter');
+  const cur = pf.value;
+  pf.innerHTML = '<option value="">All people</option>';
+  people.forEach(p => {
+    const o = document.createElement('option');
+    o.value=p; o.textContent=p;
+    if (p===cur) o.selected=true;
+    pf.appendChild(o);
+  });
+}
+
+function updateFormula() {
+  const names = people.map(p=>`"${p}"`).join(',');
+  const f = `=INDEX({${names}},MOD(ROWS($A$2:A2)-1,${people.length})+1)`;
+  const el = document.getElementById('index-formula');
+  if (el) el.textContent = f;
+}
+
+function openLeave(weekIndex) {
+  leaveTarget = weekIndex;
+  const rota = buildRota();
+  const row = rota[weekIndex];
+  document.getElementById('leave-modal-title').textContent = 'Out of Office — '+row.basePerson;
+  document.getElementById('leave-modal-desc').textContent = 'Week of '+fmtDate(row.date)+'. Choose someone to cover, or skip the week entirely.';
+  const sel = document.getElementById('leave-cover');
+  sel.innerHTML = '';
+  people.filter(p=>p!==row.basePerson).forEach(p => {
+    const o = document.createElement('option'); o.value=p; o.textContent=p; sel.appendChild(o);
+  });
+  openModal('leave');
+}
+
+async function markLeaveNocover() {
+  if (leaveTarget===null) return;
+  overrides[leaveTarget] = {leave:true, cover:null};
+  closeModal('leave'); refresh();
+  await saveOverride(leaveTarget, 'ooo', null);
+  toast('Week marked as skipped');
+}
+
+async function markLeaveWithCover() {
+  if (leaveTarget===null) return;
+  const cover = document.getElementById('leave-cover').value;
+  overrides[leaveTarget] = {leave:true, cover};
+  closeModal('leave'); refresh();
+  await saveOverride(leaveTarget, 'ooo', cover);
+  toast(cover+' covering that week');
+}
+
+async function restoreWeek(weekIndex) {
+  delete overrides[weekIndex];
+  refresh();
+  await deleteOverride(weekIndex);
+  toast('Week restored');
+}
+
+function openModal(name) {
+  if (name==='swap') populateSwapSelects();
+  document.getElementById('modal-'+name).classList.add('open');
+}
+function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
+
+function populateSwapSelects() {
+  const rota = buildRota();
+  ['swap-a','swap-b'].forEach(id => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '';
+    rota.forEach(r => {
+      const o = document.createElement('option');
+      o.value=r.weekIndex;
+      o.textContent=fmtDate(r.date)+' — '+r.displayPerson;
+      sel.appendChild(o);
+    });
+  });
+  document.getElementById('swap-b').selectedIndex=1;
+}
+
+async function doSwap() {
+  const a = parseInt(document.getElementById('swap-a').value);
+  const b = parseInt(document.getElementById('swap-b').value);
+  if (a===b) { toast('Pick two different weeks'); return; }
+  const base = buildRotaBase();
+  overrides[a] = {leave:false, cover:base[b]};
+  overrides[b] = {leave:false, cover:base[a]};
+  closeModal('swap'); refresh();
+  await saveOverride(a, 'swap', b+1);
+  toast('Weeks swapped');
+}
+
+function setView(mode, btn) {
+  viewMode = mode;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function refresh() { renderStats(); renderPeople(); renderTable(); }
+
+function exportCSV() {
+  const rota = buildRota();
+  const lines = ['Week,Date (Monday),Facilitator,Original Assignee,Status'];
+  rota.forEach(r => {
+    const ds = r.date.toISOString().slice(0,10);
+    const status = isCurrentWeek(r.date)?'Current':isPast(r.date)?'Past':r.isLeave?(r.cover?'Covered':'Skipped'):'Upcoming';
+    lines.push(`${r.idx},${ds},${r.displayPerson},${r.basePerson},${status}`);
+  });
+  const blob = new Blob([lines.join('\n')],{type:'text/csv'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='scrum-rota.csv'; a.click();
+  toast('CSV downloaded');
+}
+
+function copyText(text, msg) { navigator.clipboard.writeText(text).then(()=>toast(msg||'Copied')); }
+function copyFormula() { copyText(document.getElementById('index-formula').textContent,'Formula copied'); }
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+document.querySelectorAll('.modal-backdrop').forEach(bd => {
+  bd.addEventListener('click', e => { if(e.target===bd) bd.classList.remove('open'); });
+});
+
+loadOverrides();
+</script>
+
+</body>
+</html>
